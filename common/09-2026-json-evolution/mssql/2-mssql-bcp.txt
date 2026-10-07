@@ -1,0 +1,33 @@
+-----------------------------------------------
+-- 2 Загрузка\выгрузка данных
+-----------------------------------------------
+
+-- ВЫГРУЗКА ДАННЫХ
+
+bcp "SELECT order_details FROM dbo.orders;" queryout "C:\out\orders.json" -T -c -C 65001 -S "localhost\MSSQLSERVER01" -d OrdersData
+
+
+1000000 rows copied.
+Network packet size (bytes): 4096
+Clock Time (ms.) Total     : 17015  Average : (58771.67 rows per sec.)
+
+-----------------------------------------------
+-----------------------------------------------
+
+-- ЗАГРУЗКА ДАННЫХ
+1. Создание файла-формата (только столбец order_details):
+
+bcp OrdersData.dbo.Orders format nul -c -f C:\out\1-bcp-orders.fmt -T -S "localhost\MSSQLSERVER01"
+------ 14.0
+------ 1
+------ 1       SQLCHAR             0       0       "\r\n"   2     order_details                  Latin1_General_100_BIN2_UTF8
+
+
+bcp OrdersData.dbo.Orders in "C:\out\orders_postgresq.json" -f C:\out\1-bcp-orders.fmt -T -S "localhost\MSSQLSERVER01" -C 65001
+
+
+1000000 rows copied.
+Network packet size (bytes): 4096
+Clock Time (ms.) Total     : 84750  Average : (11799.41 rows per sec.)
+
+
